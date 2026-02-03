@@ -44,7 +44,7 @@ public class htmlAnalyzer {
 
                 }
             }
-            System.out.println("Tag mais profunda:" + valorLinha);
+            System.out.println(valorLinha);
         } catch (IOException e) {
             e.printStackTrace();
         }
