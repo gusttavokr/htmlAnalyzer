@@ -5,7 +5,7 @@ import java.io.IOException;
 public class htmlAnalyzer {
     public static void main(String[] args) {
         // Caminho absoluto ou relativo para o arquivo HTML
-        String caminho = "teste6.html"; // ajuste o caminho se necessário
+        String caminho = "src/teste.html"; // ajuste o caminho se necessário
 
         int profundidade = 0;
         int abertura = 0;
