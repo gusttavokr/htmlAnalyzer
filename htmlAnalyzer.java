@@ -1,32 +1,38 @@
-import java.net.URI;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class htmlAnalyzer {
     public static void main(String[] args) {
-        String urlString = "teste.html"; // Exemplo de URL
-
         try {
-            URI uri = new URI(urlString);
-            URL url = uri.toURL();
+            // Substitua pela sua URL real
+            String urlString = "http://127.0.0.1:5500/teste.html";
+            URL url = new URL(urlString);
 
-            // Abre o stream de leitura
-            try (InputStream is = url.openStream();
-                 Scanner scanner = new Scanner(is, "UTF-8")) {
-                
-                // Lê linha por linha
-                while (scanner.hasNextLine()) {
-                    String linha = scanner.nextLine();
-                    // Exibe a linha (apenas texto bruto)
-                    System.out.println(linha);
-                }
+            // Abra uma conexão e leia o conteúdo HTML
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder htmlContent = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                htmlContent.append(line);
             }
-        } catch (IOException e) {
-            System.err.println("Erro de I/O: " + e.getMessage());
+            reader.close();
+
+            // Use expressões regulares para encontrar o trecho desejado
+            String regex = "<p>(.*?)</p>"; // Exemplo: procurando por parágrafos
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(htmlContent.toString());
+            while (matcher.find()) {
+                String trechoDesejado = matcher.group(1);
+                System.out.println("Trecho encontrado: " + trechoDesejado);
+            }
         } catch (Exception e) {
-            System.err.println("Erro geral: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
