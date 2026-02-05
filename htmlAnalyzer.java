@@ -14,7 +14,6 @@ public class htmlAnalyzer {
         valorLinha = depth(caminho, profundidade, abertura, valorLinha);
         System.out.println(valorLinha);
 
-        removeTag(valorLinha);
     }
 
     public static String depth(String caminho, int profundidade, int abertura, String valorLinha){
@@ -54,33 +53,43 @@ public class htmlAnalyzer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+        String doisPrimeiros = valorLinha.substring(0, 1);
+        if (doisPrimeiros.equals("<")) {
+            valorLinha = removeTag(valorLinha);
+        }
+
         return valorLinha;
     }
 
-    public static void removeTag(String valorObtido){
+    public static String removeTag(String valorObtido){
 
         StringBuilder novaString = new StringBuilder(valorObtido);
 
-        for (int i = 0; i < valorObtido.length(); i++){
-            char element = valorObtido.charAt(i);
+        for (int i = 0; i < novaString.length(); i++){
+            char element = novaString.charAt(i);
             
             if (element == '<') {
-                novaString.deleteCharAt(i);
-                continue;
+                // for (int j = i; novaString.charAt(j) != '>'; j++){
+                //     novaString.deleteCharAt(j);
+                // }
+
+                while (element != '>') {
+                    novaString.deleteCharAt(i);
+                    element = novaString.charAt(i);
+                }
             }
+
             if (element == '>') {
                 novaString.deleteCharAt(i);
-                continue;
+                i--;
             }
-            System.out.println(element);
-            // if (element == '<' || element == '>') {
-            //     novaString.deleteCharAt(i);
-            //     continue;
-            // } else{
-            //     System.out.println(element);
-            // }
 
+            // System.out.println(novaString);
+            // System.out.println(element);                    
         }
-
+                
+        return novaString.toString();
     }
 }
