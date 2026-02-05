@@ -10,7 +10,12 @@ public class htmlAnalyzer {
         int profundidade = 0;
         int abertura = 0;
         String valorLinha = "";
-        
+
+        valorLinha = depth(caminho, profundidade, abertura, valorLinha);
+        System.out.println(valorLinha);
+    }
+
+    public static String depth(String caminho, int profundidade, int abertura, String valorLinha){
         try (BufferedReader reader = new BufferedReader(new FileReader(caminho))) {
             String linha;
             // boolean dentroTag = false;
@@ -44,9 +49,9 @@ public class htmlAnalyzer {
 
                 }
             }
-            System.out.println(valorLinha);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return valorLinha;
     }
 }
