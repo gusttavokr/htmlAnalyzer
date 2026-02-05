@@ -5,7 +5,7 @@ import java.io.IOException;
 public class htmlAnalyzer {
     public static void main(String[] args) {
         // Caminho absoluto ou relativo para o arquivo HTML
-        String caminho = "src/teste.html"; // ajuste o caminho se necessário
+        String caminho = "src/teste2.html"; // ajuste o caminho se necessário
 
         int profundidade = 0;
         int abertura = 0;
@@ -13,6 +13,8 @@ public class htmlAnalyzer {
 
         valorLinha = depth(caminho, profundidade, abertura, valorLinha);
         System.out.println(valorLinha);
+
+        removeTag(valorLinha);
     }
 
     public static String depth(String caminho, int profundidade, int abertura, String valorLinha){
@@ -53,5 +55,32 @@ public class htmlAnalyzer {
             e.printStackTrace();
         }
         return valorLinha;
+    }
+
+    public static void removeTag(String valorObtido){
+
+        StringBuilder novaString = new StringBuilder(valorObtido);
+
+        for (int i = 0; i < valorObtido.length(); i++){
+            char element = valorObtido.charAt(i);
+            
+            if (element == '<') {
+                novaString.deleteCharAt(i);
+                continue;
+            }
+            if (element == '>') {
+                novaString.deleteCharAt(i);
+                continue;
+            }
+            System.out.println(element);
+            // if (element == '<' || element == '>') {
+            //     novaString.deleteCharAt(i);
+            //     continue;
+            // } else{
+            //     System.out.println(element);
+            // }
+
+        }
+
     }
 }
