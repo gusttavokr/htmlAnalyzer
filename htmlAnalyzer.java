@@ -1,11 +1,19 @@
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.IOException;
+import java.net.URL;
+import java.net.HttpURLConnection;
 
 public class htmlAnalyzer {
     public static void main(String[] args) {
-        // Caminho absoluto ou relativo para o arquivo HTML
-        String caminho = "src/teste2.html"; // ajuste o caminho se necessário
+
+        if (args.length == 0) {
+            System.out.println("Uso: java htmlAnalyzer <URL>");
+            System.out.println("Exemplo: java htmlAnalyzer https://www.exemplo.com");
+            return;
+        }
+
+        String caminho = args[0];
 
         int profundidade = 0;
         int abertura = 0;
@@ -17,14 +25,20 @@ public class htmlAnalyzer {
     }
 
     public static String depth(String caminho, int profundidade, int abertura, String valorLinha){
-        try (BufferedReader reader = new BufferedReader(new FileReader(caminho))) {
+        try {
+            URL url = new URL(caminho);
+            HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
+            conexao.setRequestMethod("GET");
+            conexao.setRequestProperty("User-Agent", "Mozilla/5.0");
+            
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
             String linha;
-            // boolean dentroTag = false;
+
             while ((linha = reader.readLine()) != null) {
                 String linhaLimpa = linha.strip();
 
                 if (linhaLimpa.length() >= 2) {
-                    // String primeiro = linhaLimpa.substring(0, 1);
+
                     String doisPrimeiros = linhaLimpa.substring(0, 2);
 
                     // abertura de uma tag
@@ -40,7 +54,7 @@ public class htmlAnalyzer {
                         // System.out.println("Abertura atual: " + abertura);
                         // System.out.println("Profundidade atual: " + profundidade);
                         
-                        // fechamento de uma tag                    
+                    // fechamento de uma tag                    
                     } else if (doisPrimeiros.equals("</")) {
                         // System.out.println(linha);
                         abertura--;
@@ -50,7 +64,9 @@ public class htmlAnalyzer {
 
                 }
             }
+            reader.close();
         } catch (IOException e) {
+            System.err.println("Erro ao acessar a URL: " + caminho);
             e.printStackTrace();
         }
 
@@ -71,10 +87,7 @@ public class htmlAnalyzer {
             char element = novaString.charAt(i);
             
             if (element == '<') {
-                // for (int j = i; novaString.charAt(j) != '>'; j++){
-                //     novaString.deleteCharAt(j);
-                // }
-
+                
                 while (element != '>') {
                     novaString.deleteCharAt(i);
                     element = novaString.charAt(i);
